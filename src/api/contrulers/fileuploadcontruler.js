@@ -17,6 +17,6 @@ exports.creatfileupload = async(req,res)=>{
         return res.json({ status: 'success', message: 'File uploaded successfully' });
       } catch (err) {
         console.log('Error uploading file:', err);
-        return res.status(500).json({ message: 'Error uploading file.' });
+        // return res.status(500).json({ message: 'Error uploading file.' });
       }
 }
