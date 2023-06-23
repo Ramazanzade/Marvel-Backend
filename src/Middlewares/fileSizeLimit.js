@@ -20,4 +20,4 @@ if(fileOverlimit.length){
 next()
 }
 
-module.exports=fileSizeLimit
+module.exports=FileSizeLimit

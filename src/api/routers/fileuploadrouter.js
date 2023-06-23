@@ -8,9 +8,9 @@ const {
 
 const fileexlimiter = require("../../Middlewares/fileextlimiter")
 const filePayload =require('../../Middlewares/filePayload')
-const fileSizeLimit =require('../../Middlewares/fileSizeLimit')
+const FileSizeLimit =require('../../Middlewares/fileSizeLimit')
 
 router.get('/send', sendfileupload);
-router.post('/creat',creatfileupload,filePayload,fileSizeLimit,fileexlimiter(['.png','.jpg','.jpeg']) );
+router.post('/creat',creatfileupload,filePayload,FileSizeLimit,fileexlimiter(['.png','.jpg','.jpeg']) );
 module.exports = router;
 //module 
