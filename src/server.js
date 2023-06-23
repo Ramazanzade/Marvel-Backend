@@ -4,4 +4,4 @@ require('dotenv').config();
 const server = http.createServer(app)
 
   
-server.listen(8080)
+server.listen(8082)

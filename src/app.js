@@ -12,7 +12,7 @@ app.use(express.urlencoded({ extended: true }))
 mongoose.connect(CONNECTION_STRING)                                                     
 .then(res=>console.log('connect'))
 .catch(err=>console.log(err))
-app.options("*", cors({ origin: ['http://localhost:19006',  'http://localhost:8080','https://fluffy-tarsier-c3f7df.netlify.app'], optionsSuccessStatus: 200 }));
+app.options("*", cors({ origin: ['http://localhost:19006',  'http://localhost:8082','https://fluffy-tarsier-c3f7df.netlify.app'], optionsSuccessStatus: 200 }));
 app.options("*", cors({ origin: '*', optionsSuccessStatus: 200 }));
 app.use('/api/user',UserRouter)
 app.use('/api/file',fileUploadrouter)
