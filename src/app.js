@@ -9,7 +9,7 @@ const fileUploadrouter = require('./api/routers/fileuploadrouter')
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-mongoose.connect(CONNECTION_STRING)
+mongoose.connect(CONNECTION_STRING)                                                     
 .then(res=>console.log('connect'))
 .catch(err=>console.log(err))
 app.options("*", cors({ origin: ['http://localhost:19006',  'http://localhost:8080','https://fluffy-tarsier-c3f7df.netlify.app'], optionsSuccessStatus: 200 }));
