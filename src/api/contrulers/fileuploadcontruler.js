@@ -10,11 +10,15 @@ exports.creatfileupload = async(req,res)=>{
         if (!req.files || Object.keys(req.files).length === 0) {
           return res.status(400).json({ message: 'No files were uploaded.' });
         }
-    
         const file = req.files.file;
         console.log(file);
-    
-        return res.json({ status: 'success', message: 'File uploaded successfully' });
+    Object.keys(file).forEach(key =>{
+      const filepaht = path.json(__dirname, 'file', file[key].name)
+      file[key].mv(filepaht, (err)=>{
+        if(err) return res.status(500).json({status:'error', message:err})
+      })
+    })
+        return res.json({ status: 'success', message:Object.keys(file).toString() });
       } catch (err) {
         console.log('Error uploading file:', err);
         return res.status(500).json({ message: 'Error uploading file.' });
