@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: true }))
 mongoose.connect(CONNECTION_STRING)
 .then(res=>console.log('connect'))
 .catch(err=>console.log(err))
-app.options("*", cors({ origin: ['http://localhost:19006', 'https://marvel-backend-vzsr.onrender.com'], optionsSuccessStatus: 200 }));
+app.options("*", cors({ origin: ['http://localhost:19006', 'https://fluffy-tarsier-c3f7df.netlify.app'], optionsSuccessStatus: 200 }));
 app.options("*", cors({ origin: '*', optionsSuccessStatus: 200 }));
 const UserRouter = require('./api/routers/userrouter')
 const fileUploadrouter = require('./api/routers/fileuploadrouter')
