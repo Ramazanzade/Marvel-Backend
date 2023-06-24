@@ -8,7 +8,7 @@ exports.sendfileupload= async (req,res)=>{
 exports.creatfileupload = async(req,res)=>{
     try {
         if (!req.files || Object.keys(req.files).length === 0) {
-          return res.status(400).json({ message: 'No files were uploaded.' });
+          return res.status(400).json({ message: 'No files were .' });
         }
         const file = req.files.file;
         console.log(file);
