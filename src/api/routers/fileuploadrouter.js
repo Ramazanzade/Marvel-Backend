@@ -6,9 +6,9 @@ const {
     creatfileupload
 } =require('../contrulers/fileuploadcontruler')
 
-const fileexlimiter = require("../../Middlewares/fileextlimiter")
-const filePayload =require('../../Middlewares/filePayload')
-const FileSizeLimit =require('../../Middlewares/fileSizeLimit')
+const {fileexlimiter} = require("../../Middlewares/fileextlimiter")
+const {filePayload} =require('../../Middlewares/filePayload')
+const {FileSizeLimit} =require('../../Middlewares/fileSizeLimit')
 
 router.get('/send', sendfileupload);
 router.post('/creat',creatfileupload,filePayload,FileSizeLimit,fileexlimiter(['.png','.jpg','.jpeg']) );
