@@ -3,7 +3,6 @@ const { CONNECTION_STRING}=require('./confing')
 const {mongoose}= require('mongoose')
 const cors = require('cors')
 const app = express()
-const fileUpload = require('express-fileupload');
 require('dotenv').config();
 const UserRouter = require('./api/routers/userrouter')
 const fileUploadrouter = require('./api/routers/fileuploadrouter')
@@ -15,7 +14,6 @@ mongoose.connect(CONNECTION_STRING)
 .catch(err=>console.log(err))
 app.options("*", cors({ origin: ['http://localhost:19006',  'http://localhost:8082','https://fluffy-tarsier-c3f7df.netlify.app'], optionsSuccessStatus: 200 }));
 app.options("*", cors({ origin: '*', optionsSuccessStatus: 200 }));
-app.use(fileUpload());
 app.use('/api/user',UserRouter)
 app.use('/api/file',fileUploadrouter)
 app.use((err,res)=>{
