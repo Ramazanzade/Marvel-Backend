@@ -1,26 +1,84 @@
 require('dotenv').config();
-const fileUpload = require('express-fileupload');
 const path = require('path');
-exports.sendfileupload= async (req,res)=>{
- res.sendFile(path.join(__dirname,'http://localhost:19006'))
+const File = require("../../models/filemodel")
+exports.filesget= async (req,res)=>{
+  const fileId = req.params.id;
+
+  File.findById(fileId, (err, file) => {
+    if (err) {
+      console.error('Error retrieving file:', err);
+      return res.status(500).send('Error retrieving file');
+    }
+
+    if (!file) {
+      return res.status(404).send('File not found');
+    }
+
+    const filePath = file.url;
+    res.sendFile(filePath);
+  });}
+
+
+
+exports.fileadd = async(req,res)=>{
+  const { originalname, filename, path } = req.file;
+
+  const file = new File({
+    name: originalname,
+    url: path,
+    type: 'image' // or 'video' depending on the file type
+  });
+
+  file.save((err, savedFile) => {
+    if (err) {
+      console.error('Error saving file:', err);
+      return res.status(500).send('Error saving file');
+    }
+
+    res.json(savedFile);
+  });
 }
 
-exports.creatfileupload = async(req,res)=>{
-    try {
-        if (!req.files || Object.keys(req.files).length === 0) {
-          return res.status(400).json({ message: 'No files were .' });
-        }
-        const file = req.files.file;
-        console.log(file);
-    Object.keys(file).forEach(key =>{
-      const filepaht = path.json(__dirname, 'file', file[key].name)
-      file[key].mv(filepaht, (err)=>{
-        if(err) return res.status(500).json({status:'error', message:err})
-      })
-    })
-        return res.json({ status: 'success', message:Object.keys(file).toString() });
-      } catch (err) {
-        console.log('Error uploading file:', err);
-        return res.status(500).json({ message: 'Error uploading file.' });
+
+exports.filedelet = async(req,res)=>{
+  const fileId = req.params.id;
+
+  File.findByIdAndDelete(fileId, (err, file) => {
+    if (err) {
+      console.error('Error deleting file:', err);
+      return res.status(500).send('Error deleting file');
+    }
+
+    if (!file) {
+      return res.status(404).send('File not found');
+    }
+
+    fs.unlink(file.url, (err) => {
+      if (err) {
+        console.error('Error deleting file from the file system:', err);
       }
+    });
+
+    res.sendStatus(204);
+  });
+
+}
+
+
+exports.fileupdate= async(req,res)=>{
+  const fileId = req.params.id;
+  const { catogory } = req.body;
+
+  File.findByIdAndUpdate(fileId, { catogory }, { new: true }, (err, updatedFile) => {
+    if (err) {
+      console.error('Error updating file:', err);
+      return res.status(500).send('Error updating file');
+    }
+
+    if (!updatedFile) {
+      return res.status(404).send('File not found');
+    }
+
+    res.json(updatedFile);
+  });
 }
