@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }))
 mongoose.connect(CONNECTION_STRING)                                                     
 .then(res=>console.log('connect'))
 .catch(err=>console.log(err))
-app.options("*", cors({ origin: ['http://localhost:19006',  'http://localhost:8080','https://fluffy-tarsier-c3f7df.netlify.app', "https://marvel-backend-vzsr.onrender.com"], optionsSuccessStatus: 200 }));
+app.options("*", cors({ origin: ['http://localhost:19006',  'http://localhost:8080','https://fluffy-tarsier-c3f7df.netlify.app', "https://marvel-backend2.onrender.com"], optionsSuccessStatus: 200 }));
 app.options("*", cors({ origin: '*', optionsSuccessStatus: 200 }));
 app.use('/.netlify/functions/api/user',UserRouter)
 app.use('/.netlify/functions/api/file',fileUploadrouter)
@@ -25,8 +25,6 @@ app.use((err,res)=>{
 })
 // skklsdk ssjksidhds sdisis ixkjcvnd skjdzuis sdisis
 // skklsdk ssjksidhds sdisis ixkjcvnd skjdzuis sdisis
-// asdkjhwakjdhwbjkaesh wejasdhlikjadhuiwex welauksdhjliakjdhsw ejahdsauisdkhwd jdhgiluakdh 
-// qwjkdhnadhwuneik eakjdhsnijkasd jashduiads jhbscujadsb 
 
 
 module.exports=app
