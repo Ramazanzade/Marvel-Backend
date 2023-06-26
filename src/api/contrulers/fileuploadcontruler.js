@@ -1,7 +1,8 @@
 require('dotenv').config();
 const path = require('path');
 const multer = require('multer');
-const File = require("../../models/filemodel")
+const File = require("../../models/filemodel");
+const { log } = require('console');
 
 
 
@@ -21,6 +22,7 @@ exports.fileadd = async (req, res) => {
   upload.single('file')(req, res, async (err) => {
     if (err) {
       console.error('Error uploading file:', err);
+      console.log('1')
       return res.status(500).json({ message: 'Error uploading file', error: err });
     }
 
@@ -37,6 +39,7 @@ exports.fileadd = async (req, res) => {
       res.json(savedFile);
     } catch (err) {
       console.error('Error saving file:', err);
+      console.log('1')
       res.status(500).json({ message: 'Error saving file', error: err });
     }
   });
