@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 exports.fileadd = async (req, res) => {
-  upload.array('files', 5)(req, res, async (err) => {
+  upload.single('file')(req, res, async (err) => {
     if (err) {
       console.error('Error uploading file:', err);
       console.log('2')
