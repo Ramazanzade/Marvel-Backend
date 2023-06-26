@@ -23,8 +23,6 @@ app.use((err,res)=>{
         statusCode:err.statusCode || 500
     })
 })
-// skklsdk ssjksidhds sdisis ixkjcvnd skjdzuis sdisis
-// asjhdliuaksjdh laukshjiaks jkakHSniaks jkhasjsa jkahsij 
-// ajshdajkj ajkhsdaks akjhsduiaj aukjhsna jkha ajsh
+
 module.exports=app
 module.exports.handler = serverless(app);

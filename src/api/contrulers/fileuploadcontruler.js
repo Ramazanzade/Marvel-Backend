@@ -20,24 +20,24 @@ exports.filesget= async (req,res)=>{
 
 
 
-exports.fileadd = async(req,res)=>{
-  const { originalname, filename, path } = req.file;
-
-  const file = new File({
-    name: originalname,
-    url: path,
-    type: 'image' // or 'video' depending on the file type
-  });
-
-  file.save((err, savedFile) => {
-    if (err) {
+  exports.fileadd = async(req, res) => {
+    const { originalname, filename, path } = req.file;
+  
+    const file = new File({
+      catogory: originalname,
+      url: path,
+      type: 'image' 
+    });
+  
+    try {
+      const savedFile = await file.save();
+      res.json(savedFile);
+    } catch (err) {
       console.error('Error saving file:', err);
-      return res.status(500).send('Error saving file');
+      res.status(500).json({ message: 'Error saving file', error: err });
     }
-
-    res.json(savedFile);
-  });
-}
+  };
+  
 
 
 exports.filedelet = async(req,res)=>{
