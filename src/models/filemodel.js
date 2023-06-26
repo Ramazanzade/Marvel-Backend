@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const fileSchema = new mongoose.Schema({
-  catogory: {
+  category: {
     type: String,
     required: true
   },

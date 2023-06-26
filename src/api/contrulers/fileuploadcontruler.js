@@ -3,8 +3,6 @@ const path = require('path');
 const multer = require('multer');
 const File = require("../../models/filemodel");
 
-
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/'); 
@@ -15,6 +13,7 @@ const storage = multer.diskStorage({
     cb(null, `${file.fieldname}-${uniqueSuffix}${fileExtension}`); 
   },
 });
+
 const fileFilter = (req, file, cb) => {
   if (!file.originalname.match(/\.(jpg|jpeg|png|gif|mp4|avi)$/)) {
     return cb(new Error('Only image and video files are allowed!'), false);
@@ -24,29 +23,27 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
-exports.fileadd = async (req, res) => {
-  upload.single('file')(req, res, async (err) => {
+exports.fileadd = async (req, res, next) => {
+  upload.any()(req, res, async (err) => {
     if (err) {
       console.error('Error uploading file:', err);
-      console.log('2')
+      console.log('2');
       return res.status(500).json({ message: 'Error uploading file', error: err });
     }
 
-    const { originalname, filename, path } = req.file;
-
-    const file = new File({
-      catogory: originalname,
-      url: path,
+    const files = req.files.map(file => ({
+      category: file.originalname,
+      url: file.path,
       type: 'image',
-    });
+    }));
 
     try {
-      const savedFile = await file.save();
-      res.json(savedFile);
+      const savedFiles = await File.insertMany(files);
+      res.json(savedFiles);
     } catch (err) {
-      console.error('Error saving file:', err);
-      console.log('1')
-      res.status(500).json({ message: 'Error saving file', error: err });
+      console.error('Error saving files:', err);
+      console.log('1');
+      res.status(500).json({ message: 'Error saving files', error: err });
     }
   });
 };
@@ -98,9 +95,9 @@ exports.filedelet = async(req,res)=>{
 
 exports.fileupdate= async(req,res)=>{
   const fileId = req.params.id;
-  const { catogory } = req.body;
+  const { category } = req.body;
 
-  File.findByIdAndUpdate(fileId, { catogory }, { new: true }, (err, updatedFile) => {
+  File.findByIdAndUpdate(fileId, { category }, { new: true }, (err, updatedFile) => {
     if (err) {
       console.error('Error updating file:', err);
       return res.status(500).send('Error updating file');
