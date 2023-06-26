@@ -2,7 +2,6 @@ require('dotenv').config();
 const path = require('path');
 const multer = require('multer');
 const File = require("../../models/filemodel");
-const { log } = require('console');
 
 
 
@@ -44,6 +43,7 @@ exports.fileadd = async (req, res) => {
     }
   });
 };
+
 
 exports.filesget= async (req,res)=>{
   const fileId = req.params.id;
