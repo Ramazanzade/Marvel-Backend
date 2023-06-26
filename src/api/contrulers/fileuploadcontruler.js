@@ -15,8 +15,15 @@ const storage = multer.diskStorage({
     cb(null, `${file.fieldname}-${uniqueSuffix}${fileExtension}`); 
   },
 });
+const fileFilter = (req, file, cb) => {
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif|mp4|avi)$/)) {
+    return cb(new Error('Only image and video files are allowed!'), false);
+  }
+  cb(null, true);
+};
 
-const upload = multer({ storage });
+const upload = multer({ storage, fileFilter });
+
 exports.fileadd = async (req, res) => {
   upload.single('file')(req, res, async (err) => {
     if (err) {
