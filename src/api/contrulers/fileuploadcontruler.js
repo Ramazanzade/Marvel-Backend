@@ -1,6 +1,47 @@
 require('dotenv').config();
 const path = require('path');
+const multer = require('multer');
 const File = require("../../models/filemodel")
+
+
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); 
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
+    const fileExtension = path.extname(file.originalname);
+    cb(null, `${file.fieldname}-${uniqueSuffix}${fileExtension}`); 
+  },
+});
+
+const upload = multer({ storage });
+exports.fileadd = async (req, res) => {
+  upload.single('file')(req, res, async (err) => {
+    if (err) {
+      console.error('Error uploading file:', err);
+      return res.status(500).json({ message: 'Error uploading file', error: err });
+    }
+
+    const { originalname, filename, path } = req.file;
+
+    const file = new File({
+      catogory: originalname,
+      url: path,
+      type: 'image',
+    });
+
+    try {
+      const savedFile = await file.save();
+      res.json(savedFile);
+    } catch (err) {
+      console.error('Error saving file:', err);
+      res.status(500).json({ message: 'Error saving file', error: err });
+    }
+  });
+};
+
 exports.filesget= async (req,res)=>{
   const fileId = req.params.id;
 
@@ -18,26 +59,6 @@ exports.filesget= async (req,res)=>{
     res.sendFile(filePath);
   });}
 
-
-
-  exports.fileadd = async(req, res) => {
-    const { originalname, filename, path } = req.file;
-  
-    const file = new File({
-      catogory: originalname,
-      url: path,
-      type: 'image' 
-    });
-  
-    try {
-      const savedFile = await file.save();
-      res.json(savedFile);
-    } catch (err) {
-      console.error('Error saving file:', err);
-      res.status(500).json({ message: 'Error saving file', error: err });
-    }
-  };
-  
 
 
 exports.filedelet = async(req,res)=>{
