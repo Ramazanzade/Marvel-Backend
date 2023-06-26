@@ -22,7 +22,7 @@ exports.fileadd = async (req, res) => {
   upload.single('file')(req, res, async (err) => {
     if (err) {
       console.error('Error uploading file:', err);
-      console.log('1')
+      console.log('2')
       return res.status(500).json({ message: 'Error uploading file', error: err });
     }
 
