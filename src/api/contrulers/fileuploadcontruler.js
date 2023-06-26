@@ -25,7 +25,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage, fileFilter });
 
 exports.fileadd = async (req, res) => {
-  upload.single('avatar5')(req, res, async (err) => {
+  upload.single('file')(req, res, async (err) => {
     if (err) {
       console.error('Error uploading file:', err);
       console.log('2')
