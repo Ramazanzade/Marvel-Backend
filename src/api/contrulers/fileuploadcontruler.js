@@ -4,14 +4,15 @@ const multer = require('multer');
 const File = require("../../models/filemodel");
 const fs = require('fs');
 
-const uploadDirectory = 'uploads/';
+const uploadDirectory = path.join(__dirname, '../../uploads/');
 
 if (!fs.existsSync(uploadDirectory)) {
   fs.mkdirSync(uploadDirectory);
 }
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null,uploadDirectory); 
+    cb(null, uploadDirectory); 
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
@@ -33,13 +34,12 @@ exports.fileadd = async (req, res, next) => {
   upload.any()(req, res, async (err) => {
     if (err) {
       console.error('Error uploading file:', err);
-      console.log('2');
       return res.status(500).json({ message: 'Error uploading file', error: err });
     }
 
     const files = req.files.map(file => ({
       category: file.originalname,
-      url: `${req.protocol}://${req.get('host')}/${file.path}`,
+      url: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`,
       type: 'image',
     }));
 
@@ -48,7 +48,6 @@ exports.fileadd = async (req, res, next) => {
       res.json(savedFiles);
     } catch (err) {
       console.error('Error saving files:', err);
-      console.log('1');
       res.status(500).json({ message: 'Error saving files', error: err });
     }
   });
