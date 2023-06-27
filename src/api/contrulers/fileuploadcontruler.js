@@ -2,10 +2,16 @@ require('dotenv').config();
 const path = require('path');
 const multer = require('multer');
 const File = require("../../models/filemodel");
+const fs = require('fs');
 
+const uploadDirectory = 'uploads/';
+
+if (!fs.existsSync(uploadDirectory)) {
+  fs.mkdirSync(uploadDirectory);
+}
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); 
+    cb(null,uploadDirectory); 
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
