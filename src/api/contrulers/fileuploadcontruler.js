@@ -45,7 +45,10 @@ exports.fileadd = async (req, res, next) => {
 
     try {
       const savedFiles = await File.insertMany(files);
-      res.json(savedFiles);
+      const responseData = {
+        files: savedFiles.map(file => file.url)
+      };
+      res.json(responseData);
     } catch (err) {
       console.error('Error saving files:', err);
       res.status(500).json({ message: 'Error saving files', error: err });
