@@ -13,7 +13,7 @@ const filePayload =require('../../Middlewares/filePayload')
 const FileSizeLimit=require('../../Middlewares/fileSizeLimit')
 
 router.get('/file/:id', filesget);
-router.post('/file',fileadd );
+// router.post('/file',fileadd );
 router.delete('/file/:id',filedelet);
 router.put('/file/:id',fileupdate)
 module.exports = router;
