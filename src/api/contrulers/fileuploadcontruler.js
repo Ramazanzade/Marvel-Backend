@@ -3,12 +3,16 @@ const path = require('path');
 const multer = require('multer');
 const File = require("../../models/filemodel");
 const fs = require('fs');
+const express = require('express');
+const app = express();
 
 const uploadDirectory = path.join(__dirname, '../../uploads/');
 
 if (!fs.existsSync(uploadDirectory)) {
   fs.mkdirSync(uploadDirectory);
 }
+
+app.use('/uploads', express.static(uploadDirectory));
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -17,7 +21,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
     const fileExtension = path.extname(file.originalname);
-    cb(null, `${file.originalname}-${uniqueSuffix}${fileExtension}`); 
+    cb(null, `${file.fieldname}-${uniqueSuffix}${fileExtension}`); 
   },
 });
 
@@ -39,22 +43,20 @@ exports.fileadd = async (req, res, next) => {
 
     const files = req.files.map(file => ({
       category: file.originalname,
-      url: `${req.protocol}://${req.get('host')}/file/file/uploads/${file.filename}`,
+      url: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`,
       type: 'image',
     }));
 
     try {
       const savedFiles = await File.insertMany(files);
-      const responseData = {
-        files: savedFiles.map(file => file.url)
-      };
-      res.json(responseData);
+      res.json(savedFiles);
     } catch (err) {
       console.error('Error saving files:', err);
       res.status(500).json({ message: 'Error saving files', error: err });
     }
   });
 };
+
 
 
 exports.filesget= async (req,res)=>{
