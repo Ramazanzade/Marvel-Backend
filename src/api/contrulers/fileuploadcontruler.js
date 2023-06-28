@@ -39,7 +39,7 @@ exports.fileadd = async (req, res, next) => {
 
     const files = req.files.map(file => ({
       category: file.originalname,
-      url: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`,
+      url: `https://marvel-backend2.onrender.com/uploads/${file.filename}`,
       type: 'image',
     }));
 
