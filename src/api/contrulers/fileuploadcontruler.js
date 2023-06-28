@@ -3,16 +3,12 @@ const path = require('path');
 const multer = require('multer');
 const File = require("../../models/filemodel");
 const fs = require('fs');
-const express = require('express');
-const app = express();
 
 const uploadDirectory = path.join(__dirname, '../../uploads/');
 
 if (!fs.existsSync(uploadDirectory)) {
   fs.mkdirSync(uploadDirectory);
 }
-
-app.use('/uploads', express.static(uploadDirectory));
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -21,7 +17,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
     const fileExtension = path.extname(file.originalname);
-    cb(null, `${file.fieldname}-${uniqueSuffix}${fileExtension}`); 
+    cb(null, `${file.originalname}-${uniqueSuffix}${fileExtension}`); 
   },
 });
 
@@ -56,7 +52,6 @@ exports.fileadd = async (req, res, next) => {
     }
   });
 };
-
 
 
 exports.filesget= async (req,res)=>{
