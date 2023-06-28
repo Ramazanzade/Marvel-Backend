@@ -3,21 +3,23 @@ const path = require('path');
 const multer = require('multer');
 const File = require("../../models/filemodel");
 const fs = require('fs');
+const express = require('express');
+const app = express();
 
 const uploadDirectory = path.join(__dirname, '../../uploads/');
 
 if (!fs.existsSync(uploadDirectory)) {
   fs.mkdirSync(uploadDirectory);
-}
+} 
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadDirectory); 
+    cb(null, uploadDirectory);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
     const fileExtension = path.extname(file.originalname);
-    cb(null, `${file.originalname}-${uniqueSuffix}${fileExtension}`); 
+    cb(null, `${file.originalname}-${uniqueSuffix}${fileExtension}`);
   },
 });
 
@@ -29,6 +31,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({ storage, fileFilter });
+app.use('/uploads', express.static(uploadDirectory));
 
 exports.fileadd = async (req, res, next) => {
   upload.any()(req, res, async (err) => {
@@ -54,7 +57,7 @@ exports.fileadd = async (req, res, next) => {
 };
 
 
-exports.filesget= async (req,res)=>{
+exports.filesget = async (req, res) => {
   const fileId = req.params.id;
 
   File.findById(fileId, (err, file) => {
@@ -69,11 +72,12 @@ exports.filesget= async (req,res)=>{
 
     const filePath = file.url;
     res.sendFile(filePath);
-  });}
+  });
+}
 
 
 
-exports.filedelet = async(req,res)=>{
+exports.filedelet = async (req, res) => {
   const fileId = req.params.id;
 
   File.findByIdAndDelete(fileId, (err, file) => {
@@ -98,7 +102,7 @@ exports.filedelet = async(req,res)=>{
 }
 
 
-exports.fileupdate= async(req,res)=>{
+exports.fileupdate = async (req, res) => {
   const fileId = req.params.id;
   const { category } = req.body;
 
