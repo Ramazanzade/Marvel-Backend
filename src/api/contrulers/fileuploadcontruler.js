@@ -3,12 +3,16 @@ const path = require('path');
 const multer = require('multer');
 const File = require("../../models/filemodel");
 const fs = require('fs');
+const express = require('express');
+const app = express();
 
 const uploadDirectory = path.join(__dirname, '../../uploads/');
 
 if (!fs.existsSync(uploadDirectory)) {
   fs.mkdirSync(uploadDirectory);
 }
+
+app.use('/uploads', express.static(uploadDirectory));
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -39,7 +43,7 @@ exports.fileadd = async (req, res, next) => {
 
     const files = req.files.map(file => ({
       category: file.originalname,
-      url: `https://marvel-backend2.onrender.com/uploads/${file.filename}`,
+      url: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`,
       type: 'image',
     }));
 
@@ -52,6 +56,7 @@ exports.fileadd = async (req, res, next) => {
     }
   });
 };
+
 
 
 exports.filesget= async (req,res)=>{
