@@ -23,7 +23,6 @@ app.use((err,res)=>{
         statusCode:err.statusCode || 500
     })
 })
-// eioasdjiüekd ekjdhqüiek kjhniqüek qküjhndiüe jkndsüj
 
 
 
