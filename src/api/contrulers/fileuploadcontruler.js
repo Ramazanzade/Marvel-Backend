@@ -25,7 +25,8 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  if (!file.originalname.match(/\.(jpg|jpeg|png|gif|mp4|avi)$/i)) {
+  const allowedExtensions = /\.(jpg|jpeg|png|gif|mp4|avi)$/i;
+  if (!allowedExtensions.test(file.originalname.toLowerCase())) {
     return cb(new Error('Only image and video files are allowed!'), false);
   }
   cb(null, true);
@@ -45,7 +46,7 @@ exports.fileadd = async (req, res, next) => {
     const files = req.files.map(file => ({
       category: file.originalname,
       url: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`, // Use file.filename directly
-      type: 'image',
+      type: file.mimetype.startsWith('image') ? 'image' : 'video',
     }));
 
     try {
@@ -57,8 +58,6 @@ exports.fileadd = async (req, res, next) => {
     }
   });
 };
-
-
 
 exports.filesget = async (req, res) => {
   const fileId = req.params.id;
@@ -77,7 +76,6 @@ exports.filesget = async (req, res) => {
     res.status(500).send('Error retrieving file');
   }
 };
-
 
 
 
