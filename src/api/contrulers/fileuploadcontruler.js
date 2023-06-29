@@ -44,7 +44,7 @@ exports.fileadd = async (req, res, next) => {
 
     const files = req.files.map(file => ({
       category: file.originalname,
-      url: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`,
+      url: `${req.protocol}://${req.get('host')}/uploads/${path.basename(file.filename)}`, // Use path.basename to get just the filename
       type: 'image',
     }));
 
