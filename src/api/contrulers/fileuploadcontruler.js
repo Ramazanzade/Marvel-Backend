@@ -3,11 +3,6 @@ const path = require('path');
 const multer = require('multer');
 const File = require("../../models/filemodel");
 const fs = require('fs');
-const express = require('express');
-const app = express();
-
-const uploadDirectory = path.join(__dirname, '../../uploads/');
-
 if (!fs.existsSync(uploadDirectory)) {
   fs.mkdirSync(uploadDirectory);
 } 
@@ -32,8 +27,6 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({ storage, fileFilter });
-
-app.use('/uploads', express.static(uploadDirectory));
 
 exports.fileadd = async (req, res, next) => {
   upload.any()(req, res, async (err) => {

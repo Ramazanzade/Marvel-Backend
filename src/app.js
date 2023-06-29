@@ -16,7 +16,9 @@ mongoose.connect(CONNECTION_STRING)
 app.options("*", cors({ origin: ['http://localhost:19006',  'http://localhost:8080', "https://marvel-backend2.onrender.com"], optionsSuccessStatus: 200 }));
 app.options("*", cors({ origin: '*', optionsSuccessStatus: 200 }));
 app.use('/user',UserRouter)
-app.use('/uploads',fileUploadrouter)
+app.use('/file',fileUploadrouter)
+const uploadDirectory = path.join(__dirname, 'uploads');
+app.use('/uploads', express.static(uploadDirectory));
 app.use((err,res)=>{
     res.status(err.statusCode || 500).json({
         message:err?.message || "Server error",
