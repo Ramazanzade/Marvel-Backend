@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     const fileExtension = path.extname(file.originalname);
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
-    const fileName = `${file.originalname.split('.')[0]}-${uniqueSuffix}${fileExtension}`;
+    const fileName = `${uniqueSuffix}${fileExtension}`; // Update filename generation
     cb(null, fileName);
   },
 });
@@ -44,7 +44,7 @@ exports.fileadd = async (req, res, next) => {
 
     const files = req.files.map(file => ({
       category: file.originalname,
-      url: `${req.protocol}://${req.get('host')}/uploads/${path.basename(file.filename)}`, // Use path.basename to get just the filename
+      url: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`, // Use file.filename directly
       type: 'image',
     }));
 
@@ -57,6 +57,7 @@ exports.fileadd = async (req, res, next) => {
     }
   });
 };
+
 
 exports.filesget = async (req, res) => {
   const fileId = req.params.id;
