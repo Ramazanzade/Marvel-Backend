@@ -3,9 +3,9 @@ const path = require('path');
 const multer = require('multer');
 const File = require("../../models/filemodel");
 const fs = require('fs');
-if (!fs.existsSync(uploadDirectory)) {
-  fs.mkdirSync(uploadDirectory);
-} 
+// if (!fs.existsSync(uploadDirectory)) {
+//   fs.mkdirSync(uploadDirectory);
+// } 
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

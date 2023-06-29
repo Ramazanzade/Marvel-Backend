@@ -3,6 +3,7 @@ const { CONNECTION_STRING}=require('./confing')
 const {mongoose}= require('mongoose')
 const cors = require('cors')
 const app = express()
+const path = require('path');
 require('dotenv').config();
 const UserRouter = require('./api/routers/userrouter')
 const fileUploadrouter = require('./api/routers/fileuploadrouter')
