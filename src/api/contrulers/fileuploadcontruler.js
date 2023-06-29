@@ -32,15 +32,20 @@ const fileFilter = (req, file, cb) => {
 };
 
 const upload = multer({ storage, fileFilter });
-app.use('/uploads', express.static(uploadDirectory));
-
+app.use('/uploads', express.static(uploadDirectory), function(err, req, res, next) {
+  if (err) {
+    console.error('Error serving static files:', err);
+    res.status(500).json({ message: 'Error serving static file', error: err });
+  } else {
+    next();
+  }
+});
 exports.fileadd = async (req, res, next) => {
   upload.any()(req, res, async (err) => {
     if (err) {
       console.error('Error uploading file:', err);
       return res.status(500).json({ message: 'Error uploading file', error: err });
     }
-
     const files = req.files.map(file => ({
       category: file.originalname,
       url: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`,
