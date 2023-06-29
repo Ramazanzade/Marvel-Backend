@@ -63,20 +63,21 @@ exports.fileadd = async (req, res, next) => {
 exports.filesget = async (req, res) => {
   const fileId = req.params.id;
 
-  File.findById(fileId, (err, file) => {
-    if (err) {
-      console.error('Error retrieving file:', err);
-      return res.status(500).send('Error retrieving file');
-    }
+  try {
+    const file = await File.findById(fileId);
 
     if (!file) {
       return res.status(404).send('File not found');
     }
 
     const filePath = file.url;
-    res.sendFile(filePath);
-  });
-}
+    res.sendFile(path.join(__dirname, '../../', filePath));
+  } catch (err) {
+    console.error('Error retrieving file:', err);
+    res.status(500).send('Error retrieving file');
+  }
+};
+
 
 
 
