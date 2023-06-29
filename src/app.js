@@ -3,7 +3,6 @@ const { CONNECTION_STRING}=require('./confing')
 const {mongoose}= require('mongoose')
 const cors = require('cors')
 const app = express()
-const path = require('path');
 require('dotenv').config();
 const UserRouter = require('./api/routers/userrouter')
 const fileUploadrouter = require('./api/routers/fileuploadrouter')
@@ -18,8 +17,6 @@ app.options("*", cors({ origin: ['http://localhost:19006',  'http://localhost:80
 app.options("*", cors({ origin: '*', optionsSuccessStatus: 200 }));
 app.use('/user',UserRouter)
 app.use('/file',fileUploadrouter)
-const uploadDirectory = path.join(__dirname, 'uploads');
-app.use('/uploads', express.static(uploadDirectory));
 app.use((err,res)=>{
     res.status(err.statusCode || 500).json({
         message:err?.message || "Server error",
