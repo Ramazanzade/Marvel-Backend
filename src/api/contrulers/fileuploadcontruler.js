@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     const fileExtension = path.extname(file.originalname);
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
-    const fileName = `${uniqueSuffix}${fileExtension}`; // Update filename generation
+    const fileName = `${file.originalname}-${uniqueSuffix}${fileExtension}`; // Include original filename in the generated filename
     cb(null, fileName);
   },
 });
