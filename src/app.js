@@ -24,6 +24,6 @@ app.use((err,res)=>{
     })
 })
 
-// ieourjiosrdnd djngdjkgndkj kdjnfgkjdngdil dfjhgfnfdj
+// ieourjiosrdnd djngdjkgndkj kdjnfgkjdngdil 
 module.exports=app
 module.exports.handler = serverless(app);

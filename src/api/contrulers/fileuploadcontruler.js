@@ -66,12 +66,12 @@ exports.filesget = async (req, res) => {
   try {
     const file = await File.findById(fileId);
 
-    if (!file) {
+    if (!file || !fs.existsSync(path.join(uploadDirectory, file.url))) {
       return res.status(404).send('File not found');
     }
 
     const filePath = file.url;
-    res.sendFile(path.join(__dirname, '../../', filePath));
+    res.sendFile(path.join(uploadDirectory, filePath));
   } catch (err) {
     console.error('Error retrieving file:', err);
     res.status(500).send('Error retrieving file');
