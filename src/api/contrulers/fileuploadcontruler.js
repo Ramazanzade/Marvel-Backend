@@ -59,24 +59,29 @@
     });
   };
 
-exports.filesget = async (req, res) => {
-  const fileId = req.params.id;
-
-  try {
-    const file = await File.findById(fileId);
-
-    if (!file || !fs.existsSync(path.join(uploadDirectory, file.url))) {
-      return res.status(404).send('File not found');
+  exports.filesget = async (req, res) => {
+    const fileId = req.params.id;
+  
+    try {
+      const file = await File.findById(fileId);
+  
+      if (!file) {
+        return res.status(404).send('File not found');
+      }
+  
+      const filePath = path.join(uploadDirectory, file.url);
+  
+      if (!fs.existsSync(filePath)) {
+        return res.status(404).send('File not found');
+      }
+  
+      res.sendFile(filePath);
+    } catch (err) {
+      console.error('Error retrieving file:', err);
+      res.status(500).send('Error retrieving file');
     }
-
-    const filePath = file.url;
-    res.sendFile(path.join(uploadDirectory, filePath));
-  } catch (err) {
-    console.error('Error retrieving file:', err);
-    res.status(500).send('Error retrieving file');
-  }
-};
-
+  };
+  
 
 
 exports.filedelet = async (req, res) => {
