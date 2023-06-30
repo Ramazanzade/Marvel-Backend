@@ -17,11 +17,11 @@ const storage = multer.diskStorage({
     cb(null, uploadDirectory);
   },
   filename: (req, file, cb) => {
-    const fileExtension = path.extname(file.originalname);
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
-    const fileName = `${file.originalname}-${uniqueSuffix}${fileExtension}`;
+    const fileName = `${uniqueSuffix}${path.extname(file.originalname)}`;
     cb(null, fileName);
   },
+  
 });
 
 const fileFilter = (req, file, cb) => {
@@ -63,20 +63,20 @@ exports.fileadd = async (req, res, next) => {
 
 
 
-exports.filesget = async (req, res) => {
-  try {
-    const files = await File.find();
+  exports.filesget = async (req, res) => {
+    try {
+      const files = await File.find();
 
-    if (files.length === 0) {
-      return res.status(404).send('No files found');
+      if (files.length === 0) {
+        return res.status(404).send('No files found');
+      }
+
+      res.json(files);
+    } catch (err) {
+      console.error('Error retrieving files:', err);
+      res.status(500).send('Error retrieving files');
     }
-
-    res.json(files);
-  } catch (err) {
-    console.error('Error retrieving files:', err);
-    res.status(500).send('Error retrieving files');
-  }
-};
+  };
 
 
 
