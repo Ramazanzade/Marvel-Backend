@@ -45,9 +45,11 @@ exports.fileadd = async (req, res, next) => {
 
     const files = req.files.map(file => ({
       category: file.originalname,
-      url: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`, // Use file.filename directly
+      url: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`,
       type: file.mimetype.startsWith('image') ? 'image' : 'video',
+      filename: file.filename, // Add this line to store the filename in the database
     }));
+    
 
     try {
       const savedFiles = await File.insertMany(files);

@@ -24,6 +24,6 @@ app.use((err,res)=>{
     })
 })
 
-//    dfmdçcs 
+//     
 module.exports=app
 module.exports.handler = serverless(app);
