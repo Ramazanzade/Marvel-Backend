@@ -1,82 +1,78 @@
-  require('dotenv').config();
-  const path = require('path');
-  const multer = require('multer');
-  const File = require("../../models/filemodel");
-  const fs = require('fs');
-  const express = require('express');
-  const app = express();
+require('dotenv').config();
+const path = require('path');
+const multer = require('multer');
+const File = require("../../models/filemodel");
+const fs = require('fs');
+const express = require('express');
+const app = express();
 
-  const uploadDirectory = path.resolve(__dirname, '../../uploads/'); 
+const uploadDirectory = path.resolve(__dirname, '../../uploads/');
 
-  if (!fs.existsSync(uploadDirectory)) {
-    fs.mkdirSync(uploadDirectory);
-  } 
+if (!fs.existsSync(uploadDirectory)) {
+  fs.mkdirSync(uploadDirectory);
+}
 
-  const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, uploadDirectory);
-    },
-    filename: (req, file, cb) => {
-      const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
-      const fileName = `${uniqueSuffix}${path.extname(file.originalname)}`;
-      cb(null, fileName);
-    },
-    
-  });
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDirectory);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
+    const fileName = `${uniqueSuffix}${path.extname(file.originalname)}`;
+    cb(null, fileName);
+  },
+});
 
-  const fileFilter = (req, file, cb) => {
-    const allowedExtensions = /\.(jpg|jpeg|png|gif|mp4|avi)$/i;
-    if (!allowedExtensions.test(file.originalname.toLowerCase())) {
-      return cb(new Error('Only image and video files are allowed!'), false);
+const fileFilter = (req, file, cb) => {
+  const allowedExtensions = /\.(jpg|jpeg|png|gif|mp4|avi)$/i;
+  if (!allowedExtensions.test(file.originalname.toLowerCase())) {
+    return cb(new Error('Only image and video files are allowed!'), false);
+  }
+  cb(null, true);
+};
+
+const upload = multer({ storage, fileFilter });
+
+app.use('/uploads', express.static(uploadDirectory));
+
+exports.fileadd = async (req, res, next) => {
+  upload.any()(req, res, async (err) => {
+    if (err) {
+      console.error('Error uploading file:', err);
+      return res.status(500).json({ message: 'Error uploading file', error: err });
     }
-    cb(null, true);
-  };
 
-  const upload = multer({ storage, fileFilter });
+    const files = req.files.map(file => ({
+      category: file.originalname,
+      url: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`,
+      type: file.mimetype.startsWith('image') ? 'image' : 'video',
+      filename: file.filename,
+    }));
 
-  app.use('/uploads', express.static(uploadDirectory));
+    try {
+      const savedFiles = await File.insertMany(files);
+      res.json(savedFiles);
+    } catch (err) {
+      console.error('Error saving files:', err);
+      res.status(500).json({ message: 'Error saving files', error: err });
+    }
+  });
+};
 
-  exports.fileadd = async (req, res, next) => {
-    upload.any()(req, res, async (err) => {
-      if (err) {
-        console.error('Error uploading file:', err);
-        return res.status(500).json({ message: 'Error uploading file', error: err });
-      }
+exports.filesget = async (req, res) => {
+  try {
+    const files = await File.find();
 
-      const files = req.files.map(file => ({
-        category: file.originalname,
-        url: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`,
-        type: file.mimetype.startsWith('image') ? 'image' : 'video',
-        filename: file.filename, // Add this line to store the filename in the database
-      }));
-      
+    if (files.length === 0) {
+      return res.status(404).send('No files found');
+    }
 
-      try {
-        const savedFiles = await File.insertMany(files);
-        res.json(savedFiles);
-      } catch (err) {
-        console.error('Error saving files:', err);
-        res.status(500).json({ message: 'Error saving files', error: err });
-      }
-    });
-  };
-
-
-
-    exports.filesget = async (req, res) => {
-      try {
-        const files = await File.find();
-
-        if (files.length === 0) {
-          return res.status(404).send('No files found');
-        }
-
-        res.json(files);
-      } catch (err) {
-        console.error('Error retrieving files:', err);
-        res.status(500).send({ message: 'Error retrieving files', error: err.toString() });
-      }
-    };
+    res.json(files);
+  } catch (err) {
+    console.error('Error retrieving files:', err);
+    res.status(500).json({ message: 'Error retrieving files', error: err.message });
+  }
+};
 
 
 
