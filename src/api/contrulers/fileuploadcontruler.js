@@ -74,7 +74,7 @@
         res.json(files);
       } catch (err) {
         console.error('Error retrieving files:', err);
-        res.status(500).send('Error retrieving files');
+        res.status(500).send({ message: 'Error retrieving files', error: err.toString() });
       }
     };
 
