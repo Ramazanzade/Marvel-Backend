@@ -62,29 +62,23 @@ exports.fileadd = async (req, res, next) => {
 
 
 
-
 exports.filesget = async (req, res) => {
-  const fileId = req.params.id;
-
   try {
-    const file = await File.findById(fileId);
+    const files = await File.find();
 
-    if (!file) {
-      return res.status(404).send('File not found');
+    if (files.length === 0) {
+      return res.status(404).send('No files found');
     }
 
-    const filePath = path.join(uploadDirectory, path.basename(file.url));
+    const fileUrls = files.map(file => `${req.protocol}://${req.get('host')}/uploads/${file.filename}`);
 
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).send('File not found');
-    }
-
-    res.sendFile(filePath);
+    res.json(fileUrls);
   } catch (err) {
-    console.error('Error retrieving file:', err);
-    res.status(500).send('Error retrieving file');
+    console.error('Error retrieving files:', err);
+    res.status(500).send('Error retrieving files');
   }
 };
+
 
 exports.filedelet = async (req, res) => {
   const fileId = req.params.id;
