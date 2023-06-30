@@ -63,7 +63,6 @@ exports.fileadd = async (req, res, next) => {
 
 
 
-
 exports.filesget = async (req, res) => {
   try {
     const files = await File.find();
@@ -80,6 +79,7 @@ exports.filesget = async (req, res) => {
     res.status(500).send('Error retrieving files');
   }
 };
+
 
 
 exports.filedelet = async (req, res) => {
