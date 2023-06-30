@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }))
 mongoose.connect(CONNECTION_STRING)                                                     
 .then(res=>console.log('connect'))
 .catch(err=>console.log(err))
-app.options("*", cors({ origin: ['http://localhost:19006',  'http://localhost:8080', "https://marvel-backend2.onrender.com"], optionsSuccessStatus: 200 }));
+app.options("*", cors({ origin: ['http://localhost:19007',  'http://localhost:8080', "https://marvel-backend2.onrender.com"], optionsSuccessStatus: 200 }));
 app.options("*", cors({ origin: '*', optionsSuccessStatus: 200 }));
 app.use('/api/user',UserRouter)
 app.use('/api/file',fileUploadrouter)
@@ -24,6 +24,6 @@ app.use((err,res)=>{
     })
 })
 
-//    
+//    dfmdçcs 
 module.exports=app
 module.exports.handler = serverless(app);
