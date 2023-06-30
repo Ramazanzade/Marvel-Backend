@@ -71,9 +71,7 @@ exports.filesget = async (req, res) => {
       return res.status(404).send('No files found');
     }
 
-    const fileUrls = files.map(file => `${req.protocol}://${req.get('host')}/uploads/${file.filename}`);
-
-    res.json(fileUrls);
+    res.json(files);
   } catch (err) {
     console.error('Error retrieving files:', err);
     res.status(500).send('Error retrieving files');
