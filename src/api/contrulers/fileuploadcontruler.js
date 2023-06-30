@@ -34,7 +34,7 @@
 
   const upload = multer({ storage, fileFilter });
 
-  app.use(express.static(uploadDirectory)); // Move the static file serving middleware before other routes
+  app.use('/uploads', express.static(uploadDirectory));
 
   exports.fileadd = async (req, res, next) => {
     upload.any()(req, res, async (err) => {
@@ -45,7 +45,7 @@
 
       const files = req.files.map(file => ({
         category: file.originalname,
-        url: `${req.protocol}://${req.get('host')}/${file.filename}`,
+        url: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`,
         type: file.mimetype.startsWith('image') ? 'image' : 'video',
         filename: file.filename, // Add this line to store the filename in the database
       }));
