@@ -6,7 +6,7 @@ const fs = require('fs');
 const express = require('express');
 const app = express();
 
-const uploadDirectory = path.join(__dirname, '../../uploads/');
+const uploadDirectory = path.resolve(__dirname, '../../uploads/'); 
 
 if (!fs.existsSync(uploadDirectory)) {
   fs.mkdirSync(uploadDirectory);
@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     const fileExtension = path.extname(file.originalname);
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
-    const fileName = `${uniqueSuffix}${fileExtension}`; 
+    const fileName = `${file.originalname}-${uniqueSuffix}${fileExtension}`;
     cb(null, fileName);
   },
 });
@@ -34,7 +34,7 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
-app.use('/uploads', express.static(uploadDirectory));
+app.use(express.static(uploadDirectory)); // Move the static file serving middleware before other routes
 
 exports.fileadd = async (req, res, next) => {
   upload.any()(req, res, async (err) => {
@@ -45,7 +45,7 @@ exports.fileadd = async (req, res, next) => {
 
     const files = req.files.map(file => ({
       category: file.originalname,
-      url: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`, 
+      url: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`, // Use file.filename directly
       type: file.mimetype.startsWith('image') ? 'image' : 'video',
     }));
 
@@ -59,28 +59,8 @@ exports.fileadd = async (req, res, next) => {
   });
 };
 
-exports.filesget = async (req, res) => {
-  const fileId = req.params.id;
 
-  try {
-    const file = await File.findById(fileId);
 
-    if (!file) {
-      return res.status(404).send('File not found');
-    }
-
-    const filePath = path.join(uploadDirectory, path.basename(file.url));
-
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).send('File not found');
-    }
-
-    res.sendFile(filePath);
-  } catch (err) {
-    console.error('Error retrieving file:', err);
-    res.status(500).send('Error retrieving file');
-  }
-};
 
 
 exports.filesget = async (req, res) => {
