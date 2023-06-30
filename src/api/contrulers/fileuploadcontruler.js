@@ -59,8 +59,14 @@
     });
   };
 
+  const mongoose = require('mongoose');
+
   exports.filesget = async (req, res) => {
     const fileId = req.params.id;
+  
+    if (!mongoose.Types.ObjectId.isValid(fileId)) {
+      return res.status(400).send('Invalid file ID');
+    }
   
     try {
       const file = await File.findById(fileId);
@@ -81,6 +87,7 @@
       res.status(500).send('Error retrieving file');
     }
   };
+  
   
 
 
