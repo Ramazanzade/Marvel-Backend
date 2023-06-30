@@ -24,6 +24,6 @@ app.use((err,res)=>{
     })
 })
 
-//      ashja
+//      
 module.exports=app
 module.exports.handler = serverless(app);
