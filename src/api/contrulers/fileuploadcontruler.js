@@ -33,7 +33,8 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
-exports.fileadd = upload.any(), async (req, res, next) => {
+exports.fileadd =  async (req, res, next) => {
+  upload.any()(req, res, async (err) => {
   try {
     const files = req.files.map(file => ({
       category: file.originalname,
@@ -47,7 +48,7 @@ exports.fileadd = upload.any(), async (req, res, next) => {
   } catch (err) {
     console.error('Error saving files:', err);
     res.status(500).json({ message: 'Error saving files', error: err });
-  }
+  }})
 };
 
 exports.filesget = async (req, res) => {

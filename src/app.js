@@ -4,10 +4,6 @@ const {mongoose}= require('mongoose')
 const cors = require('cors')
 const app = express()
 require('dotenv').config();
-const path = require('path');
-const multer = require('multer');
-const File = require("./models/filemodel");
-const fs = require('fs');
 const UserRouter = require('./api/routers/userrouter')
 const fileUploadrouter = require('./api/routers/fileuploadrouter')
 const serverless = require("serverless-http");
