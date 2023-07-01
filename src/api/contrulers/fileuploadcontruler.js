@@ -30,7 +30,7 @@ const fileFilter = (req, file, cb) => {
   }
   cb(null, true);
 };
-
+app.use('/file', express.static(uploadDirectory));
 const upload = multer({ storage, fileFilter });
 
 exports.fileadd =  async (req, res, next) => {
