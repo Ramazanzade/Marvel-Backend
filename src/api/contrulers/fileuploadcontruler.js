@@ -33,30 +33,21 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage, fileFilter });
 
-app.use('/uploads', express.static(uploadDirectory));
-
-exports.fileadd = async (req, res, next) => {
-  upload.any()(req, res, async (err) => {
-    if (err) {
-      console.error('Error uploading file:', err);
-      return res.status(500).json({ message: 'Error uploading file', error: err });
-    }
-
+exports.fileadd = upload.any(), async (req, res, next) => {
+  try {
     const files = req.files.map(file => ({
       category: file.originalname,
-      url: `${req.protocol}://${req.get('host')}/uploads/${file.filename}`,
+      url: `${req.protocol}://${req.get('host')}/file/${file.filename}`,
       type: file.mimetype.startsWith('image') ? 'image' : 'video',
       filename: file.filename,
     }));
 
-    try {
-      const savedFiles = await File.insertMany(files);
-      res.json(savedFiles);
-    } catch (err) {
-      console.error('Error saving files:', err);
-      res.status(500).json({ message: 'Error saving files', error: err });
-    }
-  });
+    const savedFiles = await File.insertMany(files);
+    res.json(savedFiles);
+  } catch (err) {
+    console.error('Error saving files:', err);
+    res.status(500).json({ message: 'Error saving files', error: err });
+  }
 };
 
 exports.filesget = async (req, res) => {
@@ -70,8 +61,19 @@ exports.filesget = async (req, res) => {
     res.json(files);
   } catch (err) {
     console.error('Error retrieving files:', err);
-    res.status(500).json({ message: 'Error retrieving files', error: err.message });
+    res.status(500).json({ message: 'Error retrieving files', error: err });
   }
+};
+
+exports.filesget2 = async (req, res) => {
+  const { filename } = req.params;
+    const filePath = path.join(uploadDirectory, filename);
+    res.sendFile(filePath, err => {
+      if (err) {
+        console.error('Error retrieving file:', err);
+        res.status(500).json({ message: 'Error retrieving file', error: err });
+      }
+    });
 };
 
 
