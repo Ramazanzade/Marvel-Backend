@@ -85,7 +85,7 @@ exports.fileget2 = (req, res) => {
       return res.status(404).json({ message: 'File not found' });
     }
 
-    res.sendFile(filePath, err => {
+    res.sendFile(filePath, { root: '/' }, err => {
       if (err) {
         console.error('Error retrieving file:', err);
         res.status(500).json({ message: 'Error retrieving file', error: err });
@@ -93,6 +93,7 @@ exports.fileget2 = (req, res) => {
     });
   });
 };
+
 
 
 
