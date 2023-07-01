@@ -81,16 +81,13 @@ exports.fileget2 = (req, res) => {
 
   try {
     fs.accessSync(filePath, fs.constants.F_OK);
-    res.sendFile(filePath, { root: '/' }, err => {
-      if (err) {
-        console.error('Error retrieving file:', err);
-        res.status(500).json({ message: 'Error retrieving file', error: err });
-      }
-    });
+    res.sendFile(filePath);
   } catch (err) {
-    console.error(res.status(404).json({ message: 'File not found' }));
+    console.error('Error retrieving file:', err);
+    res.status(500).json({ message: 'Error retrieving file', error: err });
   }
 };
+
 
 
 
