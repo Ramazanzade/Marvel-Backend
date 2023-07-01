@@ -79,20 +79,19 @@ exports.fileget2 = (req, res) => {
   const { filename } = req.params;
   const filePath = path.join(uploadDirectory, filename);
 
-  fs.access(filePath, fs.constants.F_OK, (err) => {
-    if (err) {
-      console.error('File does not exist:', err);
-      return res.status(404).json({ message: 'File not found' });
-    }
-
+  try {
+    fs.accessSync(filePath, fs.constants.F_OK);
     res.sendFile(filePath, { root: '/' }, err => {
       if (err) {
         console.error('Error retrieving file:', err);
         res.status(500).json({ message: 'Error retrieving file', error: err });
       }
     });
-  });
+  } catch (err) {
+    console.error(res.status(404).json({ message: 'File not found' }));
+  }
 };
+
 
 
 
