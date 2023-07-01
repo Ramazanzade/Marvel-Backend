@@ -30,25 +30,32 @@ const fileFilter = (req, file, cb) => {
   }
   cb(null, true);
 };
+
 app.use('/file', express.static(uploadDirectory));
 const upload = multer({ storage, fileFilter });
 
-exports.fileadd =  async (req, res, next) => {
+exports.fileadd = async (req, res, next) => {
   upload.any()(req, res, async (err) => {
-  try {
-    const files = req.files.map(file => ({
-      category: file.originalname,
-      url: `${req.protocol}://${req.get('host')}/file/${file.filename}`,
-      type: file.mimetype.startsWith('image') ? 'image' : 'video',
-      filename: file.filename,
-    }));
+    if (err) {
+      console.error('Error uploading files:', err);
+      return res.status(500).json({ message: 'Error uploading files', error: err });
+    }
 
-    const savedFiles = await File.insertMany(files);
-    res.json(savedFiles);
-  } catch (err) {
-    console.error('Error saving files:', err);
-    res.status(500).json({ message: 'Error saving files', error: err });
-  }})
+    try {
+      const files = req.files.map(file => ({
+        category: file.originalname,
+        url: `${req.protocol}://${req.get('host')}/file/${file.filename}`,
+        type: file.mimetype.startsWith('image') ? 'image' : 'video',
+        filename: file.filename,
+      }));
+
+      const savedFiles = await File.insertMany(files);
+      res.json(savedFiles);
+    } catch (err) {
+      console.error('Error saving files:', err);
+      res.status(500).json({ message: 'Error saving files', error: err });
+    }
+  });
 };
 
 exports.filesget = async (req, res) => {
@@ -65,6 +72,9 @@ exports.filesget = async (req, res) => {
     res.status(500).json({ message: 'Error retrieving files', error: err });
   }
 };
+
+
+
 exports.fileget2 = (req, res) => {
   const { filename } = req.params;
   const filePath = path.join(uploadDirectory, filename);
