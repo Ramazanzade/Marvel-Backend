@@ -77,9 +77,10 @@
 
 
 
+  
   exports.fileget2 = (req, res) => {
-    const { id } = req.params;
-    const filePath = path.join(uploadDirectory, id);
+    const { filename } = req.params;
+    const filePath = path.join(uploadDirectory, filename);
 
     try {
       fs.accessSync(filePath, fs.constants.F_OK);
