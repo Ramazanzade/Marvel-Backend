@@ -13,7 +13,11 @@ const fileSchema = new mongoose.Schema({
     type: String,
     enum: ['image', 'video'],
     required: true
-  }
+  },
+  filename: {
+    type: String,
+    required: true
+  },
 });
 
 const File = mongoose.model('File', fileSchema);
