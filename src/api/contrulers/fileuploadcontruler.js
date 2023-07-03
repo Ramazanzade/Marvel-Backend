@@ -17,8 +17,8 @@
       cb(null, uploadDirectory);
     },
     filename: (req, file, cb) => {
-      const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
-      const fileName = `${uniqueSuffix}${path.extname(file.originalname)}`;
+      // const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`;
+      const fileName = `${path.extname(file.originalname)}`;
       cb(null, fileName);
     },
   });
@@ -43,10 +43,10 @@
 
       try {
         const files = req.files.map(file => ({
-          category: file.originalname,
+          // category: file.originalname,
           url: `${req.protocol}://${req.get('host')}/file/${file.filename}`,
           type: file.mimetype.startsWith('image') ? 'image' : 'video',
-          filename: file.filename,
+          filename: file.originalname,
         }));
 
         const savedFiles = await File.insertMany(files);
