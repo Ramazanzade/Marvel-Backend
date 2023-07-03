@@ -100,46 +100,29 @@
 
 
 
-
-exports.filedelet = async (req, res) => {
-  const fileId = req.params.id;
-
-  File.findByIdAndDelete(fileId, (err, file) => {
-    if (err) {
-      console.error('Error deleting file:', err);
-      return res.status(500).send('Error deleting file');
-    }
-
-    if (!file) {
-      return res.status(404).send('File not found');
-    }
-
-    fs.unlink(file.url, (err) => {
-      if (err) {
-        console.error('Error deleting file from the file system:', err);
+  exports.filedelet = async (req, res) => {
+    const fileId = req.params.id;
+  
+    try {
+      const file = await File.findByIdAndDelete(fileId);
+  
+      if (!file) {
+        return res.status(404).send('File not found');
       }
-    });
-
-    res.sendStatus(204);
-  });
-
-}
-
-
-exports.fileupdate = async (req, res) => {
-  const fileId = req.params.id;
-  const { category } = req.body;
-
-  File.findByIdAndUpdate(fileId, { category }, { new: true }, (err, updatedFile) => {
-    if (err) {
-      console.error('Error updating file:', err);
-      return res.status(500).send('Error updating file');
+  
+      const filePath = path.join(uploadDirectory, file.filename);
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.error('Error deleting file from the file system:', err);
+        }
+      });
+  
+      res.sendStatus(204);
+    } catch (err) {
+      console.error('Error deleting file:', err);
+      res.status(500).send('Error deleting file');
     }
+  };
+  
 
-    if (!updatedFile) {
-      return res.status(404).send('File not found');
-    }
 
-    res.json(updatedFile);
-  });
-}

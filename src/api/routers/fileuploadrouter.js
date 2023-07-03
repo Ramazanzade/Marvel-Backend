@@ -17,5 +17,4 @@ router.get('/', filesget);
 router.get('/file/:filename', fileget2);
 router.post('/file',fileadd );
 router.delete('/file/:id',filedelet);
-router.put('/file/:id',fileupdate)
 module.exports = router;
