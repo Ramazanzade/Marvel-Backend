@@ -75,19 +75,29 @@
 
 
 
-  
-  exports.fileget2 = (req, res) => {
-    const { filename } = req.params;
-    const filePath = path.join(uploadDirectory, filename);
-  
-    if (fs.existsSync(filePath)) {
-      res.sendFile(filePath);
-    } else {
-      console.error('File not found:', filePath);
-      res.status(404).json({ message: 'File not found' });
+
+exports.fileget2 = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const file = await File.findById(id);
+
+    if (!file) {
+      return res.status(404).json({ message: 'File not found' });
     }
-  };
-  
+
+    const filePath = path.join(uploadDirectory, file.filename);
+
+    fs.accessSync(filePath, fs.constants.F_OK);
+
+    res.sendFile(filePath);
+  } catch (err) {
+    console.error('Error retrieving file:', err);
+    res.status(500).json({ message: 'Error retrieving file', error: err });
+  }
+};
+
+
   
 
 
