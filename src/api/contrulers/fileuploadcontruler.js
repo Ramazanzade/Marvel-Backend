@@ -76,26 +76,19 @@
 
 
 
-exports.fileget2 = async (req, res) => {
-  const { id } = req.params;
 
-  try {
-    const file = await File.findById(id);
+  exports.fileget2 = (req, res) => {
+    const { id } = req.params;
+    const filePath = path.join(uploadDirectory, id);
 
-    if (!file) {
-      return res.status(404).json({ message: 'File not found' });
+    try {
+      fs.accessSync(filePath, fs.constants.F_OK);
+      res.sendFile(filePath);
+    } catch (err) {
+      console.error('Error retrieving file:', err);
+      res.status(500).json({ message: 'Error retrieving file', error: err });
     }
-
-    const filePath = path.join(uploadDirectory, file.filename);
-
-    fs.accessSync(filePath, fs.constants.F_OK);
-
-    res.sendFile(filePath);
-  } catch (err) {
-    console.error('Error retrieving file:', err);
-    res.status(500).json({ message: 'Error retrieving file', error: err });
-  }
-};
+  };
 
 
   
