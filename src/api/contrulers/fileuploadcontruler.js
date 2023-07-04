@@ -43,10 +43,12 @@
 
       try {
         const files = req.files.map(file => ({
-          category: file.originalname,
+          name: file.originalname,
           url: `${req.protocol}://${req.get('host')}/file/${file.filename}`,
           type: file.mimetype.startsWith('image') ? 'image' : 'video',
           filename: file.filename,
+          text: req.body.text, 
+        category: req.body.category
         }));
 
         const savedFiles = await File.insertMany(files);

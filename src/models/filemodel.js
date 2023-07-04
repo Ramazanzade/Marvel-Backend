@@ -1,9 +1,15 @@
 const mongoose = require('mongoose');
 
 const fileSchema = new mongoose.Schema({
-  category: {
+  name: {
     type: String,
     required: true
+  },
+  category: {
+    type: String,
+  }, 
+   text: {
+    type: String,
   },
   url: {
     type: String,
