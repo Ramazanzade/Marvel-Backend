@@ -2,7 +2,10 @@ const jwt = require('jsonwebtoken');
 const User = require('../../models/usermodel');
 require('dotenv').config();
 exports.createUser = async (req, res) => {
-    const { name, email, password,avatar} = req.body;
+  const stripe = require("stripe")(
+    "sk_test_51JSxdmKLp2r7ix2Pd2k8eknPuSjKYkFARdemkEM60UkcqYppN1klpWupUDw41kOVTt6Xdr0LbtsVmNsKbmhPcYR400sUv6LASz"
+  );
+    const { name, email, password,avatar , amount, token} = req.body;
     const isNewUser = await User.isThisEmailInUse(email);
     if (!isNewUser)
         return res.json({
@@ -17,6 +20,23 @@ exports.createUser = async (req, res) => {
     });
     await user.save();
     res.json({ success: true, user });
+
+    stripe.customers
+    .create({
+      email: email,
+      source: token.id,
+      name: token.card.name,
+    })
+    .then((customer) => {
+      return stripe.charges.create({
+        amount: parseFloat(amount) * 100,
+        description: `Payment for USD ${amount}`,
+        currency: "USD",
+        customer: customer.id,
+      });
+    })
+    .then((charge) => res.status(200).send(charge))
+    .catch((err) => console.log(err));
 };
 
 exports.userSignIn = async (req, res) => {

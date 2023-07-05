@@ -16,6 +16,15 @@ const userSchema = new mongoose.Schema({
   },
   avatar: String,
   tokens: [{ type: Object }],
+  
+  amount: {
+    type: Number,
+    unique: true,
+  },
+  token:{
+    type: String,
+    unique: true,
+  }
 });
 
 userSchema.pre('save', function (next) {
