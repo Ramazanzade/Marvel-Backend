@@ -6,6 +6,8 @@ const app = express()
 require('dotenv').config();
 const UserRouter = require('./api/routers/userrouter')
 const fileUploadrouter = require('./api/routers/fileuploadrouter')
+const splasfilerouter= require('./api/routers/Splasfilerouter')
+const onboardinfilerouter =require('./api/routers/onboardingfilerouter')
 const serverless = require("serverless-http");
 app.use(cors())
 app.use(express.json())
@@ -17,6 +19,8 @@ app.options("*", cors({ origin: ['http://localhost:3000',  'http://localhost:808
 app.options("*", cors({ origin: '*', optionsSuccessStatus: 200 }));
 app.use('/api/user',UserRouter)
 app.use('/api/file',fileUploadrouter)
+app.use('/api/splas', splasfilerouter)
+app.use('/api/onboarding',onboardinfilerouter)
 app.use((err,res)=>{
     res.status(err.statusCode || 500).json({
         message:err?.message || "Server error",
