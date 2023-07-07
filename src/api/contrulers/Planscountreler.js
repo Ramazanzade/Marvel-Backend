@@ -5,7 +5,7 @@ const Planscountreler = {
   add: async (req, res) => {
     const body = req.body;
     let product = new Plan({
-      amount: body.date,
+      amount: body.amount,
       text: body.text,
     });
 
