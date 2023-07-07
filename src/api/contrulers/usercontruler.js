@@ -5,7 +5,7 @@ exports.createUser = async (req, res) => {
   const stripe = require("stripe")(
     "sk_test_51JSxdmKLp2r7ix2Pd2k8eknPuSjKYkFARdemkEM60UkcqYppN1klpWupUDw41kOVTt6Xdr0LbtsVmNsKbmhPcYR400sUv6LASz"
   );
-    const { name, email, password,avatar , amount, token} = req.body;
+    const {  email, password,avatar , amount, token} = req.body;
     const isNewUser = await User.isThisEmailInUse(email);
     if (!isNewUser)
         return res.json({
@@ -13,7 +13,6 @@ exports.createUser = async (req, res) => {
             message: 'This email is already in use, try sign-in',
         });
     const user = await User({
-        name,
         email,
         password,
         avatar  
@@ -83,7 +82,6 @@ exports.userSignIn = async (req, res) => {
     });
   
     const userInfo = {
-      name: user.name,
       email: user.email,
       password: user.password,
       avatar:user.avatar

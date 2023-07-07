@@ -17,7 +17,7 @@ mongoose.connect(CONNECTION_STRING)
 .catch(err=>console.log(err))
 app.options("*", cors({ origin: ['http://localhost:3000',  'http://localhost:8080', "https://marvel-backend2.onrender.com"], optionsSuccessStatus: 200 }));
 app.options("*", cors({ origin: '*', optionsSuccessStatus: 200 }));
-app.use('/api/users',UserRouter)
+app.use('/api/user',UserRouter)
 app.use('/api/file',fileUploadrouter)
 app.use('/api/splas', splasfilerouter)
 app.use('/api/onboarding',onboardinfilerouter)
