@@ -44,7 +44,7 @@ app.post('/api/pay', async (req, res) => {
   });
 
 
-
+//jüksnjka askjak
 
 
 
