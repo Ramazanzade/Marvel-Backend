@@ -29,7 +29,7 @@ app.post('/api/pay', async (req, res) => {
   
     try {
       const paymentIntent = await stripe.paymentIntents.create({
-        amount: 1000, 
+        amount: Number(amount) * 100,
         currency: 'usd',
         payment_method_types: ['card'],
         description: `Payment from ${name} ${surname}`,
