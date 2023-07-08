@@ -23,7 +23,7 @@ app.use('/api/file',fileUploadrouter)
 app.use('/api/splas', splasfilerouter)
 app.use('/api/onboarding',onboardinfilerouter)
 app.use('/api/plans', Plansrouter)
-const stripe = require('stripe')('pk_test_51NRj63FWhGiOytmS6448C37rHae30uwfgDnx6vKieLjrxVOPRaT8scx54QyKQbAbrhBLcJpZjLoWdc9zAImVc2p300qtQxsrwh');
+const stripe = require('stripe')('sk_test_51NRj63FWhGiOytmSiTTHY0bZhkpUaKgvO2B0C1zScQalJQItV5WWW68ZSsnik8UnTuM5k2sQYKKefRBH45En0XvI00n6Bcbjbo');
 app.post('/api/pay', async (req, res) => {
     const { name, surname, cart, date, security } = req.body;
   
