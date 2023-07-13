@@ -27,13 +27,13 @@ const stripe = require('stripe')('sk_test_51NRj63FWhGiOytmSiTTHY0bZhkpUaKgvO2B0C
 // app.post('/api/pay', async (req, res) => {
 //     const { name, surname, cart, date, security , amount } = req.body;
   
-//     try {
-//       const paymentIntent = await stripe.paymentIntents.create({
-//         amount: Number(amount) * 100,
-//         currency: 'usd',
-//         payment_method_types: ['card'],
-//         description: `Payment from ${name} ${surname}`,
-//       });
+    try {
+      const paymentIntent = await stripe.paymentIntents.create({
+        amount: Number(amount) * 100,
+        currency: 'usd',
+        payment_method_types: ['card'],
+        description: `Payment from ${name} ${surname}`,
+      });
   
   
 //       res.status(200).json({ clientSecret: paymentIntent.client_secret });
