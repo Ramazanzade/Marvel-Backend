@@ -24,24 +24,24 @@ app.use('/api/splas', splasfilerouter)
 app.use('/api/onboarding',onboardinfilerouter)
 app.use('/api/plans', Plansrouter)
 const stripe = require('stripe')('sk_test_51NRj63FWhGiOytmSiTTHY0bZhkpUaKgvO2B0C1zScQalJQItV5WWW68ZSsnik8UnTuM5k2sQYKKefRBH45En0XvI00n6Bcbjbo');
-app.post('/api/pay', async (req, res) => {
-    const { name, surname, cart, date, security , amount } = req.body;
+// app.post('/api/pay', async (req, res) => {
+// //     const { name, surname, cart, date, security , amount } = req.body;
   
-    try {
-      const paymentIntent = await stripe.paymentIntents.create({
-        amount: Number(amount) * 100,
-        currency: 'usd',
-        payment_method_types: ['card'],
-        description: `Payment from ${name} ${surname}`,
-      });
+//     try {
+//       const paymentIntent = await stripe.paymentIntents.create({
+//         amount: Number(amount) * 100,
+//         currency: 'usd',
+//         payment_method_types: ['card'],
+//         description: `Payment from ${name} ${surname}`,
+//       });
   
   
-      res.status(200).json({ clientSecret: paymentIntent.client_secret });
-    } catch (error) {
-      console.error('Error processing payment:', error);
-      res.status(500).json({ error: 'Payment processing failed' });
-    }
-  });
+// //       res.status(200).json({ clientSecret: paymentIntent.client_secret });
+// //     } catch (error) {
+// //       console.error('Error processing payment:', error);
+// //       res.status(500).json({ error: 'Payment processing failed' });
+// //     }
+// //   });
 
 
 
